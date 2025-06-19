@@ -1,5 +1,4 @@
 <?php
-
 require_once '../includes/auth.php';
 require_once '../includes/db_connect.php';
 require_once '../includes/functions.php';
@@ -7,8 +6,8 @@ require_once '../includes/functions.php';
 $prescription_id = $_GET['prescription_id'] ?? 0;
 $pharmacy_id = $_SESSION['user_id'];
 
-// Fetch prescription details
-$stmt = $conn->prepare("SELECT p.*, u.name AS user_name 
+// Fetch prescription details with user email
+$stmt = $conn->prepare("SELECT p.*, u.name AS user_name, u.email AS user_email 
                         FROM prescriptions p 
                         JOIN users u ON p.user_id = u.id 
                         WHERE p.id = ?");
@@ -99,18 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Commit transaction
             $conn->commit();
 
-            // Send email notification
-            $to = $prescription['email']; // In a real app, we'd have user email in prescription or user table
-            $subject = "New Quotation for Your Prescription";
-            $message = "Dear {$prescription['user_name']},\n\n";
-            $message .= "A new quotation has been prepared for your prescription #{$prescription_id}.\n";
-            $message .= "Total Amount: $" . number_format($total, 2) . "\n\n";
-            $message .= "Please login to your account to view and accept/reject the quotation.\n\n";
-            $message .= "Thank you,\n{$_SESSION['user_name']}";
-
-            // In a real app, use a proper email library
-            mail($to, $subject, $message);
-
             redirect('dashboard.php', 'Quotation prepared successfully!');
         } catch (Exception $e) {
             // Rollback transaction on error
@@ -134,10 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <?php include '../includes/pharmacy_header.php'; ?>
-
     <div class="container">
         <?php echo displayMessage(); ?>
-
         <?php if (!empty($errors)): ?>
         <div class="alert alert-danger">
             <ul>
@@ -147,14 +132,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </ul>
         </div>
         <?php endif; ?>
-
         <div class="prescription-details">
             <h2>Prescription #<?php echo $prescription['id']; ?></h2>
             <p><strong>User:</strong> <?php echo $prescription['user_name']; ?></p>
             <p><strong>Note:</strong> <?php echo $prescription['note']; ?></p>
             <p><strong>Delivery Address:</strong> <?php echo $prescription['delivery_address']; ?></p>
             <p><strong>Time Slot:</strong> <?php echo $prescription['delivery_time_slot']; ?></p>
-
             <h3>Prescription Images</h3>
             <div class="image-gallery">
                 <?php if (empty($images)): ?>
@@ -168,11 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
         </div>
-
         <form method="POST" action="">
             <div class="quotation-form">
                 <h3>Prepare Quotation</h3>
-
                 <div id="items-container">
                     <?php foreach ($items as $index => $item): ?>
                     <div class="item-row">
@@ -198,12 +179,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <?php endforeach; ?>
                 </div>
-
                 <div class="total-row">
                     <strong>Total:</strong>
                     <span id="total-amount">$<?php echo number_format($total, 2); ?></span>
                 </div>
-
                 <button type="submit" class="btn submit-btn">Submit Quotation</button>
             </div>
         </form>
