@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dob = sanitize($_POST['dob']);
     $user_type = sanitize($_POST['user_type']);
 
-    // Validation
+
     if (empty($name)) $errors[] = "Name is required";
     if (empty($email)) $errors[] = "Email is required";
     if (empty($password)) $errors[] = "Password is required";
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($dob)) $errors[] = "Date of birth is required";
     if (empty($user_type)) $errors[] = "User type is required";
 
-    // Check if email exists
+
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Prescription System</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>

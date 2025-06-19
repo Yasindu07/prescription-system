@@ -7,7 +7,7 @@ require_once '../includes/functions.php';
 $user_id = $_SESSION['user_id'];
 $prescriptions = [];
 
-// Fetch user's prescriptions
+
 $stmt = $conn->prepare("SELECT * FROM prescriptions WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -23,7 +23,7 @@ $stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard - Prescription System</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>

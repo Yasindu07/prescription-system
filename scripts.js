@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Add item functionality in quotation form
   const itemsContainer = document.getElementById("items-container");
   const addItemBtn = document.querySelector(".add-item");
 
@@ -9,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const inputs = itemRow.querySelectorAll("input");
       inputs.forEach((input) => (input.value = ""));
 
-      // Change button to remove button
       const button = itemRow.querySelector("button");
       button.classList.remove("add-item");
       button.classList.add("remove-item");
@@ -24,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Remove item functionality
   itemsContainer.addEventListener("click", function (e) {
     if (e.target.classList.contains("remove-item")) {
       if (document.querySelectorAll(".item-row").length > 1) {
@@ -34,26 +31,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Calculate total amount
   function calculateTotal() {
     let total = 0;
-    document.querySelectorAll('input[name="amount[]"]').forEach((input) => {
-      const value = parseFloat(input.value) || 0;
-      total += value;
+
+    const rows = document.querySelectorAll(".item-row");
+    rows.forEach((row) => {
+      const amountInput = row.querySelector('input[name="amount[]"]');
+      const quantityDescInput = row.querySelector(
+        'input[name="quantity_description[]"]'
+      );
+
+      const amount = parseFloat(amountInput.value) || 0;
+
+      let quantity = 1;
+      if (quantityDescInput && quantityDescInput.value) {
+        const matches = quantityDescInput.value.match(/[\d.]+/g); // Extract numbers
+        if (matches) {
+          quantity = matches.reduce((acc, val) => acc * parseFloat(val), 1);
+        }
+      }
+
+      total += amount * quantity;
     });
+
     document.getElementById("total-amount").textContent =
       "$" + total.toFixed(2);
   }
 
-  // Listen for amount changes
-  if (itemsContainer) {
-    itemsContainer.addEventListener("input", function (e) {
-      if (e.target.name === "amount[]") {
-        calculateTotal();
-      }
-    });
-  }
+  itemsContainer.addEventListener("input", function (e) {
+    if (
+      e.target.name === "amount[]" ||
+      e.target.name === "quantity_description[]"
+    ) {
+      calculateTotal();
+    }
+  });
 
-  // Initialize total
   calculateTotal();
 });

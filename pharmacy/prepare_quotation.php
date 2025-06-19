@@ -6,7 +6,7 @@ require_once '../includes/functions.php';
 $prescription_id = $_GET['prescription_id'] ?? 0;
 $pharmacy_id = $_SESSION['user_id'];
 
-// Fetch prescription details with user email
+
 $stmt = $conn->prepare("SELECT p.*, u.name AS user_name, u.email AS user_email 
                         FROM prescriptions p 
                         JOIN users u ON p.user_id = u.id 
@@ -21,7 +21,7 @@ if (!$prescription) {
     redirect('prescriptions.php', 'Prescription not found');
 }
 
-// Check if pharmacy has already quoted
+
 $stmt = $conn->prepare("SELECT id FROM quotations 
                         WHERE prescription_id = ? AND pharmacy_id = ?");
 $stmt->bind_param("ii", $prescription_id, $pharmacy_id);
@@ -32,7 +32,7 @@ if ($result->num_rows > 0) {
 }
 $stmt->close();
 
-// Fetch prescription images
+
 $stmt = $conn->prepare("SELECT * FROM prescription_images 
                         WHERE prescription_id = ?");
 $stmt->bind_param("i", $prescription_id);
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $items = [];
     $total = 0;
 
-    // Process items
+
     $drug_names = $_POST['drug_name'];
     $quantity_descriptions = $_POST['quantity_description'];
     $amounts = $_POST['amount'];
@@ -69,16 +69,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Validation
+
     if (count($items) < 1) $errors[] = "At least one item is required";
     if ($total <= 0) $errors[] = "Total amount must be greater than zero";
 
     if (empty($errors)) {
-        // Start transaction
+
         $conn->begin_transaction();
 
         try {
-            // Insert quotation
+
             $stmt = $conn->prepare("INSERT INTO quotations (prescription_id, pharmacy_id, total_amount) 
                                     VALUES (?, ?, ?)");
             $stmt->bind_param("iid", $prescription_id, $pharmacy_id, $total);
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $quotation_id = $stmt->insert_id;
             $stmt->close();
 
-            // Insert items
+
             foreach ($items as $item) {
                 $stmt = $conn->prepare("INSERT INTO quotation_items (quotation_id, drug_name, quantity_description, amount) 
                                         VALUES (?, ?, ?, ?)");
@@ -95,12 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->close();
             }
 
-            // Commit transaction
+
             $conn->commit();
 
             redirect('dashboard.php', 'Quotation prepared successfully!');
         } catch (Exception $e) {
-            // Rollback transaction on error
+
             $conn->rollback();
             $errors[] = "Error: " . $e->getMessage();
         }
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prepare Quotation - Pharmacy</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./style.css">
     <script src="../scripts.js" defer></script>
 </head>
 
@@ -140,12 +140,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p><strong>Time Slot:</strong> <?php echo $prescription['delivery_time_slot']; ?></p>
             <h3>Prescription Images</h3>
             <div class="image-gallery">
-                <?php if (empty($images)): ?>
-                <p>No images available</p>
-                <?php else: ?>
+                <?php if (!empty($images)): ?>
                 <?php foreach ($images as $image): ?>
                 <div class="image-item">
-                    <img src="../../<?php echo $image['image_path']; ?>" alt="Prescription Image">
+                    <?php
+                            $fullPath = "../" . $image['image_path'];
+
+                            ?>
+                    <img src="<?php echo $fullPath; ?>" alt="Prescription Image">
                 </div>
                 <?php endforeach; ?>
                 <?php endif; ?>
@@ -164,7 +166,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group">
                             <label>Quantity (e.g., 10.00 x 5)</label>
                             <input type="text" name="quantity_description[]"
-                                value="<?php echo $item['quantity_description']; ?>" required>
+                                value="<?php echo htmlspecialchars($item['quantity_description'], ENT_QUOTES, 'UTF-8'); ?>"
+                                required>
                         </div>
                         <div class="form-group">
                             <label>Amount ($)</label>

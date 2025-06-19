@@ -13,28 +13,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $delivery_time_slot = sanitize($_POST['delivery_time_slot']);
     $user_id = $_SESSION['user_id'];
 
-    // Validation
+
     if (empty($delivery_address)) $errors[] = "Delivery address is required";
     if (empty($delivery_time_slot)) $errors[] = "Delivery time slot is required";
 
-    // Validate file uploads
+
     $imageCount = count($_FILES['images']['name']);
     if ($imageCount < 1) $errors[] = "At least one image is required";
     if ($imageCount > 5) $errors[] = "Maximum 5 images allowed";
 
     if (empty($errors)) {
-        // Start transaction
+
         $conn->begin_transaction();
 
         try {
-            // Insert prescription
+
             $stmt = $conn->prepare("INSERT INTO prescriptions (user_id, note, delivery_address, delivery_time_slot) VALUES (?, ?, ?, ?)");
             $stmt->bind_param("isss", $user_id, $note, $delivery_address, $delivery_time_slot);
             $stmt->execute();
             $prescription_id = $stmt->insert_id;
             $stmt->close();
 
-            // Upload images 
+
             for ($i = 0; $i < $imageCount; $i++) {
                 if ($_FILES['images']['error'][$i] == 0) {
                     $ext = pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION);
@@ -51,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Commit transaction
+
             $conn->commit();
             redirect('dashboard.php', 'Prescription uploaded successfully!');
         } catch (Exception $e) {
-            // Rollback transaction on error
+
             $conn->rollback();
             $errors[] = "Error: " . $e->getMessage();
         }
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Prescription - Prescription System</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>

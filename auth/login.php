@@ -22,12 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         if ($user && password_verify($password, $user['password'])) {
-            // Set session
+
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_type'] = $user['user_type'];
 
-            // Redirect based on user type
             if ($user['user_type'] === 'pharmacy') {
                 redirect('../pharmacy/dashboard.php', 'Welcome, Pharmacy!');
             } else {
@@ -46,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Login - Prescription System</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>

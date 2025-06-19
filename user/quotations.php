@@ -7,7 +7,7 @@ require_once '../includes/functions.php';
 $user_id = $_SESSION['user_id'];
 $quotations = [];
 
-// Fetch user's quotations
+
 $stmt = $conn->prepare("SELECT q.*, p.note, p.delivery_address, p.delivery_time_slot, u.name AS pharmacy_name 
                         FROM quotations q 
                         JOIN prescriptions p ON q.prescription_id = p.id 
@@ -20,7 +20,7 @@ $result = $stmt->get_result();
 $quotations = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Fetch items for each quotation
+
 foreach ($quotations as &$quotation) {
     $stmt = $conn->prepare("SELECT * FROM quotation_items WHERE quotation_id = ?");
     $stmt->bind_param("i", $quotation['id']);
@@ -39,7 +39,7 @@ unset($quotation);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quotations - Prescription System</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>

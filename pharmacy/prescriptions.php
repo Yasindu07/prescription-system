@@ -7,7 +7,7 @@ require_once '../includes/functions.php';
 $pharmacy_id = $_SESSION['user_id'];
 $prescriptions = [];
 
-// Fetch all prescriptions
+
 $stmt = $conn->prepare("SELECT p.*, u.name AS user_name 
                         FROM prescriptions p 
                         JOIN users u ON p.user_id = u.id 
@@ -17,7 +17,7 @@ $result = $stmt->get_result();
 $prescriptions = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Check if pharmacy has already quoted on each prescription
+
 foreach ($prescriptions as &$prescription) {
     $stmt = $conn->prepare("SELECT id FROM quotations 
                             WHERE prescription_id = ? AND pharmacy_id = ?");
@@ -37,7 +37,7 @@ unset($prescription);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prescriptions - Pharmacy</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>

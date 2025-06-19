@@ -1,0 +1,215 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 300;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Container */
+.container {
+    max-width: 450px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+/* Button Styles */
+.btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Alert Styles */
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.alert ul {
+    list-style: none;
+    margin: 0;
+}
+
+.alert li {
+    margin-bottom: 5px;
+}
+
+.alert li:last-child {
+    margin-bottom: 0;
+}
+
+.alert li:before {
+    content: "⚠ ";
+    margin-right: 5px;
+}
+
+/* Success Message */
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-success li:before {
+    content: "✓ ";
+    margin-right: 5px;
+}
+
+/* Links */
+a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Text alignment for login/register links */
+p {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 30px 20px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .container h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Loading state for forms */
+.form-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Focus styles for better accessibility */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+    transition: all 0.2s ease;
+}

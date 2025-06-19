@@ -7,7 +7,7 @@ $pharmacy_id = $_SESSION['user_id'];
 $pending_prescriptions = [];
 $recent_quotations = [];
 
-// Fetch pending prescriptions
+
 $stmt = $conn->prepare("SELECT p.*, u.name AS user_name 
                         FROM prescriptions p 
                         JOIN users u ON p.user_id = u.id 
@@ -23,7 +23,7 @@ $result = $stmt->get_result();
 $pending_prescriptions = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Fetch recent quotations
+
 $stmt = $conn->prepare("SELECT q.*, p.note, u.name AS user_name 
                         FROM quotations q 
                         JOIN prescriptions p ON q.prescription_id = p.id 
@@ -45,7 +45,7 @@ $stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pharmacy Dashboard - Prescription System</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
